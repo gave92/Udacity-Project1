@@ -54,8 +54,7 @@ random_distort_color {
 
 random_black_patches {
   max_black_patches: 20
-  probability: 0.95
   size_to_image_ratio: 0.12
 }
 ```
-[displayDataAugmentations.py](https://github.com/gave92/Udacity-Project1/blob/29985991397fd4fbfe87ed3635c65e79716f2e52/scripts/displayDataAugmentations.py)
+To visualize the augmentations they were run on a sample image, using: [displayDataAugmentations.py](https://github.com/gave92/Udacity-Project1/blob/29985991397fd4fbfe87ed3635c65e79716f2e52/scripts/displayDataAugmentations.py).
