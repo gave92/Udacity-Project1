@@ -1,30 +1,61 @@
 # Object detection in an urban environment
 
-In this project, you will learn how to train an object detection model using the [Tensorflow Object Detection API](https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/index.html) and [AWS Sagemaker](https://aws.amazon.com/sagemaker/). At the end of this project, you will be able to generate videos such as the one below. 
+Objective: training an object detection model using Tensorflow Object Detection API, AWS Sagemaker and transfer learning.
 
 <p align="center">
-    <img src="data/animation.gif" alt="drawing" width="600"/>
+    <img src="data/output_rcnn.gif" alt="drawing" width="600"/>
 </p>
 
-## Installation
+## Data
 
-Refer to the **Setup Instructions** page in the classroom to setup the Sagemaker Notebook instance required for this project.
+Train data is from camera images of the Waymo Open Dataset. As a first step the images with groundtruth from the training data were downloaded (in .tfrecord format) to get an idea of what the training data contained. A few of the images were displayed using matplotlib and a statistic of the groundtruth classes across the train data was calculated. The statistic shows that a vast majority of the dataset contains vehicles, less pedastrians and very few cyclists.
 
->Note: The `conda_tensorflow2_p310` kernel contains most of the required packages for this project. The notebooks contain lines for manual installation when required.
+| Vehicles | Pedestrians | Cyclists |
+| -------- | ------- | ------- |
+| 77%  |  22%   | 1%    |
 
-## Usage
+## Model testing
 
-This repository contains two notebooks:
-* [1_train_model](1_model_training/1_train_model.ipynb): this notebook is used to launch a training job and create tensorboard visualizations. 
-* [2_deploy_model](2_run_inference/2_deploy_model.ipynb): this notebook is used to deploy your model, run inference on test data and create a gif similar to the one above.
+The models tested for this project were 3 pre-trained models available in the TensorFlow 2 Object Detection Model Zoo. For each a specific pipeline configuration was used. The config was edited wrt to the one available from Model Zoo to set the path for the train and eval data (and object labels map) and to set the classes number to the one relevant for this project ("3").
 
-First, run `1_train_model.ipynb` to train your model. Once the training job is complete, run `2_deploy_model.ipynb` to deploy your model and generate the animation.
+| Model | Config file | Result video |
+| -------- | ------- | ------- |
+| EfficientDet D1  |  [pipeline.config](https://github.com/gave92/Udacity-Project1/blob/29985991397fd4fbfe87ed3635c65e79716f2e52/1_model_training/source_dir/pipeline.config)  | ![EfficientDet](data/output_efficientnet.gif) |
+| SSD with Mobilenet v2 FPN-lite  |  [pipeline_mobile.config](https://github.com/gave92/Udacity-Project1/blob/29985991397fd4fbfe87ed3635c65e79716f2e52/1_model_training/source_dir/pipeline_mobile.config)  | ![MobileNet](data/output_mobilenet.gif) |
+| Faster R-CNN with Resnet-50 (v1)  |  [pipeline_rcnn.config](https://github.com/gave92/Udacity-Project1/blob/29985991397fd4fbfe87ed3635c65e79716f2e52/1_model_training/source_dir/pipeline_rcnn.config)   | ![Faster R-CNN](data/output_rcnn.gif) |
 
-Each notebook contains the instructions for running the code, as well the requirements for the writeup. 
->Note: Only the first notebook requires a write up. 
+The training loss and validation mAP (both precision and recall) for each model was visualized using Tensorboard.
+<img width="2000" height="1089" alt="image" src="https://github.com/user-attachments/assets/d95653c4-2d77-4fb3-bef5-2da5032f726b" />
+<img width="2000" height="1079" alt="image" src="https://github.com/user-attachments/assets/99eec60e-7926-45ee-93de-8e2c2b27ecf9" />
+<img width="2000" height="1104" alt="image" src="https://github.com/user-attachments/assets/e5ac4722-ba7a-45b1-8719-708f6bad385d" />
 
-## Useful links
-* The Tensorflow Object Detection API tutorial is a great resource to debug your code. This [section](https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/training.html#configure-the-training-pipeline) in particular will teach you how to edit the `pipeline.config` file to update
-your training job.
+Based on mAP metrics the best overall model appears to be Faster R-CNN which has the highest overall mAP, though it has lower precision that both the other models when detecting large objectes. In addition the loss function for Faster R-CNN could suggest an instability of the model during training, as it is not steadily decaying. Posssibly lowering the learning rate could help with that.
 
-* [This blog post](https://aws.amazon.com/blogs/machine-learning/training-and-deploying-models-using-tensorflow-2-with-the-object-detection-api-on-amazon-sagemaker/) teaches how to label data, train and deploy a model with the Tensorflow Object Detection API and AWS Sagemaker.
+## Data augmentation options
+
+A few data augmentation options were tested by modifying the config files adding "data_augmentation_options {}" sections, e.g:
+```
+random_horizontal_flip {
+}
+
+random_scale_crop_and_pad_to_square {
+  output_size: 640
+  scale_min: 0.10000000149011612
+  scale_max: 2.0
+}
+
+random_adjust_brightness {
+  max_delta: 0.2
+}
+
+random_distort_color {
+  color_ordering: 1
+}
+
+random_black_patches {
+  max_black_patches: 20
+  probability: 0.95
+  size_to_image_ratio: 0.12
+}
+```
+[displayDataAugmentations.py](https://github.com/gave92/Udacity-Project1/blob/29985991397fd4fbfe87ed3635c65e79716f2e52/scripts/displayDataAugmentations.py)
