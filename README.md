@@ -29,7 +29,7 @@ The training loss and validation mAP (both precision and recall) for each model 
 <img width="2000" height="1079" alt="image" src="data/99eec60e-7926-45ee-93de-8e2c2b27ecf9.png" />
 <img width="2000" height="1104" alt="image" src="data/e5ac4722-ba7a-45b1-8719-708f6bad385d.png" />
 
-Based on mAP metrics the best overall model appears to be Faster R-CNN which has the highest overall mAP, though it has lower precision that both the other models when detecting large objectes. In addition the loss function for Faster R-CNN could suggest an instability of the model during training, as it is not steadily decaying. Posssibly lowering the learning rate could help with that.
+Based on mAP metrics the best overall model appears to be Faster R-CNN which has the highest overall mAP, though it has lower precision that both the other models when detecting large objects. In addition the loss function for Faster R-CNN could suggest an instability of the model during training, as it is not steadily decaying. Possibly lowering the learning rate could help with that. The values of the loss function for the other models are lower but as the models calculate loss differently the exact values are not comparable.
 
 ## Data augmentation options
 
