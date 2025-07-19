@@ -25,9 +25,9 @@ The models tested for this project were 3 pre-trained models available in the Te
 | Faster R-CNN with Resnet-50 (v1)  |  [pipeline_rcnn.config](https://github.com/gave92/Udacity-Project1/blob/29985991397fd4fbfe87ed3635c65e79716f2e52/1_model_training/source_dir/pipeline_rcnn.config)   | ![Faster R-CNN](data/output_rcnn.gif) |
 
 The training loss and validation mAP (both precision and recall) for each model was visualized using Tensorboard.
-<img width="2000" height="1089" alt="image" src="https://github.com/user-attachments/assets/d95653c4-2d77-4fb3-bef5-2da5032f726b" />
-<img width="2000" height="1079" alt="image" src="https://github.com/user-attachments/assets/99eec60e-7926-45ee-93de-8e2c2b27ecf9" />
-<img width="2000" height="1104" alt="image" src="https://github.com/user-attachments/assets/e5ac4722-ba7a-45b1-8719-708f6bad385d" />
+<img width="2000" height="1089" alt="image" src="data/d95653c4-2d77-4fb3-bef5-2da5032f726b.png" />
+<img width="2000" height="1079" alt="image" src="data/99eec60e-7926-45ee-93de-8e2c2b27ecf9.png" />
+<img width="2000" height="1104" alt="image" src="data/e5ac4722-ba7a-45b1-8719-708f6bad385d.png" />
 
 Based on mAP metrics the best overall model appears to be Faster R-CNN which has the highest overall mAP, though it has lower precision that both the other models when detecting large objectes. In addition the loss function for Faster R-CNN could suggest an instability of the model during training, as it is not steadily decaying. Posssibly lowering the learning rate could help with that.
 
